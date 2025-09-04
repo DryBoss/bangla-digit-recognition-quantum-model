@@ -1,35 +1,16 @@
-## Image Preprocessing and Flattening
+# Model Performance Summary
 
-This section describes the preprocessing pipeline applied to the dataset images before using them in machine learning models.
+| Model Type           | Dataset Type | Features | Epochs | Test Accuracy (%) | Training Time | Description |
+|---------------------|-------------|---------|--------|-----------------|---------------|-------------|
+| Quantum NN (VQC)    | Grayscale   | 4       | 20     | 39.79           | ~4h           | Only 4 features due to hardware limitations and training time |
+| Quantum NN (VQC)    | Binary      | 4       | 20     | 21.47           | ~4h           | Only 4 features due to hardware limitations and training time |
+| Classical NN        | Grayscale   | 4       | 20     | 78.36           | ~10s          | Small feature set for comparison with quantum models |
+| Classical NN        | Binary      | 4       | 20     | 66.96           | ~10s          | Small feature set for comparison with quantum models |
+| Classical NN        | Grayscale   | 44      | 20     | 96.73           | ~10s          | Features retained 95% variance using PCA |
+| Classical NN        | Binary      | 55      | 20     | 88.66           | ~10s          | Features retained 95% variance using PCA |
 
-### Steps:
 
-1. **Load Images**  
-   - Images are loaded from the `grayscale` and `binary` folders.
-   - Each image is converted to **grayscale**.
+## Conclusion
 
-2. **Crop Whitespace**  
-   - Extra background pixels are removed using a threshold.
-   - Only the region containing the actual digit/object is retained.
+The models were trained and tested on 19,702 images. Images were first preprocessed to 8×8 grayscale and binary format, then flattened into feature vectors, converted to tensors, and finally fed into the models. Classical neural networks outperform the current quantum models in both accuracy and speed. For classical models, PCA was used to retain 95% of the variance, resulting in 44 features for grayscale and 55 for binary, which significantly improved performance. Quantum models used only 4 features due to hardware and simulation limitations, restricting their expressiveness and leading to lower accuracy and slower training.
 
-3. **Resize Images**  
-   - Cropped images are resized to a fixed size (default `16x16`) suitable for ML input.
-
-4. **Normalize**  
-   - Pixel values are scaled to `[0,1]`.
-
-5. **Optional Binarization**  
-   - Images can be converted to binary using a threshold of `0.5`.
-
-6. **Flatten**  
-   - Each processed image is flattened into a 1D array for model training.
-
-7. **Save Arrays**  
-   - Processed arrays and corresponding labels are saved as `.npy` files in `features/training-a/flattened_arrays`.
-
-### Output
-
-- `X_gray.npy` and `y_gray.npy` – flattened grayscale images and labels.
-- `X_binary.npy` and `y_binary.npy` – flattened binary images and labels.
-
-This pipeline ensures uniform, normalized, and ready-to-use image data for machine learning models.
